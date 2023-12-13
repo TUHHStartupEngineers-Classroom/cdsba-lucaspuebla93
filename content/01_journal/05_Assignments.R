@@ -1,41 +1,61 @@
-# Load required libraries
-library(readxl)
-library(ggplot2)
+# Load packages
+library(tidyverse)
+library(dagitty)
+library(ggdag)
+library(ggthemr)
+ggthemr("flat")
 rm(list = ls())
 
+## Collider
+#collider <- dagify(
+#  Sales ~ Parking,
+#  Sales ~ Location,
+#  coords = list(x = c(Location = 3, Sales = 2, Parking = 1),
+#                y = c(Location = 1, Sales = 0, Parking = 1))
+#)
+## Plot DAG
+#ggdag(collider) +
+#  geom_dag_point(color = ggthemr::swatch()[2]) +
+#  geom_dag_text(color = "white") +
+#  geom_dag_edges(edge_color = "white")
+
+
+
 # Load data
-data <- read_excel("~/GitHub/cdsba-lucaspuebla93/content/01_journal/04_data.xlsx")
+data <- readRDS("~/GitHub/cdsba-lucaspuebla93/Causal_Data_Science_Data/customer_sat.rds")
+# print(data)
 
-# Assuming the first column is the X-axis and the rest are Y-axis variables
-# Change the column names accordingly if needed
-x_axis <- names(data)[1]
-y1_axis <- names(data)[2]
-y2_axis <- names(data)[3]
+# Run linear regression: satisfaction on follow_ups
+model_1 <- lm(satisfaction ~ follow_ups, data = data)
 
-# Determine scaling factors for secondary axis
-scaling_factor <- 65 / 3.95
-print(data[3])
-data[3] <- data[3] * scaling_factor
-print(scaling_factor)
-print(data[3])
+# Summarize the regression results
+summary(model_1)
 
-# Define intervals as pairs (tuples)
-interval_y1 <- c(0, 65)
-interval_y2 <- c(0, 3.95)
 
-# Reshaping the data to long format for ggplot
-data_long <- tidyr::gather(data, key = "variable", value = "value", -{{x_axis}})
+# Run linear regression: satisfaction on follow_ups and account for subscription
+model_2 <- lm(satisfaction ~ follow_ups + subscription, data = data)
 
-print("up here all good")
-# Plotting code with specified y-axis ranges
-ggplot(data_long, aes_string(x = x_axis, y = "value", color = "variable")) +
+# Summarize the regression results
+summary(model_2)
+
+
+
+# Not conditioning on subscription
+not_cond_plot <- ggplot(data, aes(x = follow_ups, y = satisfaction)) +
   geom_point() +
-  scale_color_manual(values = c("blue", "red"), labels = c(y1_axis, y2_axis)) +
-  theme_minimal() +
-  labs(x = x_axis, y = y1_axis) +
-  geom_line(aes(y = value * scaling_factor), color = "red") +
-  scale_y_continuous(sec.axis = sec_axis(~./scaling_factor, name = y2_axis)) +
-  coord_cartesian(ylim = interval_y1) +  # Set y-axis limits based on interval_y1
+  stat_smooth(method = "lm", se = FALSE)
+
+# Conditioning on subscription
+cond_plot <- ggplot(data, aes(x = follow_ups, y = satisfaction,
+                              color = subscription, 
+                              alpha = subscription)) +
+  geom_point() +
+  stat_smooth(method = "lm", se = FALSE) +
+  scale_color_manual(values = c("Premium" = "blue", "Premium+" = "red", "Elite" = "green")) +
+  scale_alpha_manual(values = c("Premium" = 0.5, "Premium+" = 0.6, "Elite" = 0.3)) +
   theme(legend.position = "top")
 
-print("up here all good too")
+# Plot both
+not_cond_plot
+cond_plot
+
