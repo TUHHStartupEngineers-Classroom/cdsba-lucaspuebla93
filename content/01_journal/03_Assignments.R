@@ -1,13 +1,9 @@
----
-title: "Regression and Statistical Inference"
-author: "Lucas Puebla"
----
-# Assignment 1
-```{r}
+# Load tidyerse package
 library(tidyverse)
 library(ggthemr)
 library(ggplot2)
 ggthemr("fresh") 
+
 
 df <- readRDS("~/GitHub/cdsba-lucaspuebla93/Causal_Data_Science_Data/car_prices.rds")
 # View(df)
@@ -19,21 +15,14 @@ dimensions <- dim(df) # Retrieve the dimensions (rows and columns) of the datafr
 cat("Number of rows:", dimensions[1], "\n")
 cat("Number of columns:", dimensions[2], "\n")
 
-```
+
+head(df) # View the first few rows of the dataframe
+summary(df) # Summary statistics for numerical columns in the dataframe
+str(df) # Structure of the dataframe, including data types
 
 
 
-# Assignment 2
-```{r}
-summary(df) # Gives summary statistics for numerical columns in the dataframe
-str(df) # Shows the structure of the dataframe, including data types
-```
-The dataframe contains columns with numbers and strings. The variables with strings in their columns are considered discrete, while the numbers are continuous.
 
-
-
-# Assignment 3
-```{r}
 # Select only numeric columns from the dataframe
 numeric_df <- df[sapply(df, is.numeric)]
 
@@ -42,7 +31,8 @@ correlation_matrix <- cor(numeric_df)
 
 # Find correlations with the 'price' variable
 price_correlations <- correlation_matrix['price', ]
-price_correlations <- price_correlations[!names(price_correlations) %in% "price"]  # Exclude price-price correlation
+price_correlations <- price_correlations[!names(price_correlations) %in% "price"]  # Exclude 'price'
+
 sorted_correlations <- sort(price_correlations, decreasing = TRUE)
 print(sorted_correlations)
 
@@ -58,12 +48,9 @@ model_relevant <- lm(price ~ ., data = df_relevant)
 
 # Summary of the linear regression model
 summary(model_relevant)
-```
 
+#----------------------------------------------------------------------
 
-
-# Assignment 4
-```{r}
 # Perform linear regression between price and enginesize
 model_enginesize <- lm(price ~ enginesize, data = df)
 
@@ -73,14 +60,8 @@ ggplot(df, aes(x = enginesize, y = price)) +
   geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
   labs(x = "Engine size", y = "Price") +
   ggtitle("Linear Regression: Price vs Engine size")
-summary(model_enginesize)
-```
-The engine size is a continuous numeric variable that takes values between 61 an 326.
-There is a linear relation with the price. An increase of the engine size leads to an increase in price.
-With Multiple R-squared 0.7916, adjusted R-squared 0.7904 and  p-value < 2.2e-16, this relation is statistically relevant.
 
-# Assignment 5
-```{r}
+#----------------------------------------------------------------------
 # Add 'seat_heating' variable with value TRUE for all observations
 df_with_seat_heating <- df %>%
   mutate(seat_heating = 1)
@@ -91,7 +72,5 @@ model_with_seat_heating <- lm(price ~ ., data = df_with_seat_heating)
 # Summary of the linear regression model
 summary(model_with_seat_heating)
 
-```
-The result NA (Not Applicable) points to the fact that there is no change whatsoever in seat heating, therefore its changes cannot be related to the changes in price.
 
 

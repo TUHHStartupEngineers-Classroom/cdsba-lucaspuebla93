@@ -1,10 +1,3 @@
----
-title: "Statistical Concepts"
-author: "Lucas Puebla"
----
-# Assignment 1
-
-```{r}
 random_vars <- readRDS("~/GitHub/cdsba-lucaspuebla93/Causal_Data_Science_Data/random_vars.rds")
 # View(random_vars)
 
@@ -28,15 +21,7 @@ cat("For the 'income' variable:\n")
 cat("Expected Value:", income_expected_value, "\n")
 cat("Variance:", income_variance, "\n")
 cat("Standard Deviation:", income_standard_deviation, "\n")
-```
 
-
-# Assignment 2
-It doesn't make any sense to compare the standard deviation as they are absolute numbers with different units. It may make sense to relate them to their mean or expected value to get percentages, and then compare those.
-
-
-# Assignment 3
-```{r}
 # Calculate covariance between 'age' and 'income'
 covariance <- cov(random_vars$age, random_vars$income)
 
@@ -46,16 +31,8 @@ correlation <- cor(random_vars$age, random_vars$income)
 # Display the computed covariance and correlation
 cat("Covariance between 'age' and 'income':", covariance, "\n")
 cat("Correlation between 'age' and 'income':", correlation, "\n")
-```
 
 
-# Assignment 4
-The magnitude of covariance does not offer a clear interpretation since it is dependent on the units of the variables. Thus, comparing variables with different units makes the resulting covariance challenging to be interpreted directly.
-Correlation, unlike covariance, provides a standardized measure between -1 and +1, making it easier to interpret. It measures both the strength and direction of the linear relationship between two variables.
-
-
-# Assignment 5
-```{r}
 # Compute conditional expected value of income for different age groups
 income_conditional_exp <- c()
 
@@ -73,7 +50,6 @@ cat("Conditional Expected Value of Income for different age groups:\n")
 cat("Age <= 18:", income_conditional_exp[1], "\n")
 cat("18 < Age < 65:", income_conditional_exp[2], "\n")
 cat("Age >= 65:", income_conditional_exp[3], "\n")
-```
 
 
 
