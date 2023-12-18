@@ -1,11 +1,3 @@
----
-title: "Randomized Controlled Trials"
-author: "Lucas Puebla"
----
-
-# Assignment 1
-
-```{r}
 # Load packages
 library(tidyverse)
 library(dagitty)
@@ -14,9 +6,12 @@ library(ggthemr)
 ggthemr("flat")
 rm(list = ls())
 
+
 # Load data
 data <- readRDS("~/GitHub/cdsba-lucaspuebla93/Causal_Data_Science_Data/abtest_online.rds")
 print(data)
+
+
 
 # Calculate summary statistics for mobile_device by group
 mobile_summary <- data %>%
@@ -47,15 +42,9 @@ ggplot(data, aes(x = as.factor(chatbot), fill = as.factor(mobile_device))) +
 ggplot(data, aes(x = as.factor(chatbot), y = previous_visit)) +
   geom_boxplot() +
   labs(x = "Group", y = "Previous Visits", title = "Comparison of Previous Visits by Group")
-```
-The proportion of users on mobile_device is almost equal in both groups.
-The average number of previous_visit shows a slight difference between groups, but medians are identical. It seems that both groups are balanced in regard to these covariates
+#######################################################################
 
 
-
-# Assignment 2
-
-```{r}
 # Fit a linear regression model
 model_1 <- lm(purchase_amount ~ chatbot, data = data)
 # Display the summary of the regression model
@@ -65,31 +54,20 @@ summary(model_1)
 model_2 <- lm(purchase ~ chatbot, data = data)
 # Display the summary of the regression model
 summary(model_2)
-```
 
 
-# Assignment 3
-
-```{r}
+#######################################################################
 # Fit a linear regression model with interaction for purchase_amount and chatbot by mobile_device
 model_interaction <- lm(purchase_amount ~ chatbot * mobile_device, data = data)
 
 # Display the summary of the regression model with interaction
 summary(model_interaction)
-```
 
-
-# Assignment 4
-
-```{r}
+#######################################################################
 # Fit a logistic regression model for purchase and chatbot
 model_purchase <- glm(purchase ~ chatbot, data = data, family = "binomial")
 
 # Display the summary of the logistic regression model for purchase
 summary(model_purchase)
-```
-Here, we can see that the coefficient for chatbot is statistically significant as indicated by the low p-value (p = 2.18e-13), The coefficient for chatbot=TRUE (-0.98939) represents the estimated log-odds ratio change in purchase behavior associated with the presence of the chatbot. Thus, the odds of making a purchase for customers exposed to the chatbot are expected to decrease by exp(-0.98939) ≈ 0.371 times compared to customers who were not exposed to the chatbot.
-
-
 
 

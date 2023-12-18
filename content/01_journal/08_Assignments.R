@@ -1,11 +1,3 @@
----
-title: "Difference-in-Differences"
-author: "Lucas Puebla"
----
-
-# Assignment 1
-
-```{r}
 # Load packages
 library(tidyverse)
 library(dagitty)
@@ -15,11 +7,14 @@ library(dplyr)
 ggthemr("flat")
 rm(list = ls())
 
+
 # Load data
 data <- readRDS("~/GitHub/cdsba-lucaspuebla93/Causal_Data_Science_Data/hospdd.rds")
 print(data)
 
 summary(data)
+
+
 
 # Filter data for treated and control groups before and after treatment
 treated_before <- data %>%
@@ -38,19 +33,14 @@ control_before <- data %>%
 treated_before
 treated_after
 control_before
-```
 
 
-# Assignment 2
 
-```{r}
 # Perform difference-in-differences analysis with fixed effects
 model <- lm(satis ~ as.factor(procedure) * as.factor(hospital) + as.factor(month), data = data)
 
 # View the summary of the regression results
 summary(model)
-```
-The notation "month + hospital" treats months and hospitals as continuous variables, which is not the case. Therefore, "as.factor(month) + as.factor(hospital)" is used to treat them as categorical variables
 
 
 

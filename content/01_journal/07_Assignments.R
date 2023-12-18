@@ -1,17 +1,8 @@
----
-title: "Matching and Subclassification"
-author: "Lucas Puebla"
----
-
-# Assignment 1
-
-```{r}
 # Load packages
 library(tidyverse)
 library(dagitty)
 library(ggdag)
 library(ggthemr)
-library(MatchIt)
 ggthemr("flat")
 rm(list = ls())
 
@@ -43,11 +34,9 @@ ggdag(custom_dag_model) +
   geom_dag_point(color = "blue") +
   geom_dag_text(color = "black") +
   geom_dag_edges(edge_color = "black")
-```
 
-# Assignment 2
 
-```{r}
+########################################################################
 # Compute the average outcome for the treatment group (premium membership)
 avg_outcome_treatment <- colMeans(data[data$card == 1, "avg_purch"], na.rm = TRUE)
 print(avg_outcome_treatment)
@@ -59,33 +48,32 @@ print(avg_outcome_control)
 # Compute the naive estimate of the Average Treatment Effect (ATE)
 naive_ate <- avg_outcome_treatment - avg_outcome_control
 print(naive_ate)
-```
+#########################################
 
-# Assignment 3
-## Coarsened Exact Matching
-```{r}
+
+
+
+
+
 # Coarsened Exact Matching
 cem_model <- matchit(card ~ age + sex + pre_avg_purch, data = data, method = "cem")
 
 # Estimate treatment effect using coarsened exact matching
 cem_estimate <- summary(cem_model, method = "ATT")
 print(cem_estimate)
-```
 
-## Nearest-Neighbor Matching
 
-```{r}
+
 # Nearest-Neighbor Matching
 nn_model <- matchit(card ~ age + sex + pre_avg_purch, data = data, method = "nearest")
 
 # Estimate treatment effect using nearest-neighbor matching
 nn_estimate <- summary(nn_model, method = "ATT")
 print(nn_estimate)
-```
 
-## Inverse Probability Weighting
 
-```{r}
+
+
 # Fit a logistic regression model to estimate the propensity scores
 logistic_model <- glm(card ~ age + sex + pre_avg_purch, data = data, family = "binomial")
 
@@ -99,4 +87,13 @@ data$ipw_weights <- ifelse(data$card == 1, 1 / data$propensity_score, 1 / (1 - d
 weighted_model <- lm(avg_purch ~ card, data = data, weights = ipw_weights)
 ipw_estimate <- summary(weighted_model)
 print(ipw_estimate)
-```
+
+
+
+
+
+
+
+
+
+

@@ -1,11 +1,3 @@
----
-title: "Instrumental Variables"
-author: "Lucas Puebla"
----
-
-# Assignment 1
-
-```{r}
 # Load packages
 library(tidyverse)
 library(dagitty)
@@ -15,9 +7,15 @@ library(AER)
 ggthemr("flat")
 rm(list = ls())
 
+
 # Load data
 data <- readRDS("~/GitHub/cdsba-lucaspuebla93/Causal_Data_Science_Data/rand_enc.rds")
 print(data)
+
+summary(data)
+cor_matrix <- cor(data)
+print(cor_matrix)
+
 
 # Define the DAG model with chosen relations and custom positions
 custom_dag_model <- 'dag {
@@ -36,12 +34,9 @@ ggdag(custom_dag_model) +
   geom_dag_point(color = "blue") +
   geom_dag_text(color = "black") +
   geom_dag_edges(edge_color = "black")
-```
 
 
-# Assignment 2
-
-```{r}
+########################################################################
 # Calculate the naive, biased estimate
 naive_biased_estimate <- data %>%
   filter(used_ftr == 1) %>%
@@ -49,32 +44,26 @@ naive_biased_estimate <- data %>%
   summarise(mean_time_spent = mean(time_spent))
 
 naive_biased_estimate
-```
+########################################################################
 
-
-# Assignment 3
-
-```{r}
 # Compute correlations
 correlation_matrix <- data %>%
   select(rand_enc, used_ftr, time_spent) %>%
   cor()
 
 correlation_matrix
-```
-The correlation coefficient between rand_enc and time_spent indicates that there might be a small but not very relevant influence of rand_enc on time_spent, therefore affirming the Relevance assumption.
-
-The correlation coefficient between rand_enc and time_spent is also small, also indicating that the Excludability assumption is probably correct.
-
-# Assignment 4
-
-```{r}
+########################################################################
 # Perform 2SLS regression
-# I am using ivreg instead of iv_robust because I am getting library errors
 iv_model <- ivreg(time_spent ~ used_ftr | rand_enc, data = data)
 
 # Summary of the IV regression
 summary(iv_model)
-```
-It appears that the naive estimate for the encouraged group (29.9) has a significant upwards bias compared to the IV estimate (9.7), indicating that the naive estimate overestimates the true effect of the treatment variable on time spent using the app for the encouraged users.
+
+
+
+
+
+
+
+
 

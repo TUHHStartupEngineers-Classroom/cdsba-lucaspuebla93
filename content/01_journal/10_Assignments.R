@@ -1,11 +1,3 @@
----
-title: "Regression Discontinuity"
-author: "Lucas Puebla"
----
-
-# Assignment 1
-
-```{r}
 # Load packages
 library(tidyverse)
 library(dagitty)
@@ -16,9 +8,12 @@ library(rdd)
 ggthemr("flat")
 rm(list = ls())
 
+
 # Load data
 data <- readRDS("~/GitHub/cdsba-lucaspuebla93/Causal_Data_Science_Data/coupon.rds")
 print(data)
+
+
 
 # Specify bandwidth range around the cutoff point
 cutoff_point <- 60  
@@ -42,13 +37,10 @@ summary(rdd_half_bw)
 # Perform RDD analysis for double the bandwidth
 rdd_double_bw <- lm(purchase_after ~ days_since_last_centered + coupon, data = data_double_bw)
 summary(rdd_double_bw)
-```
-The estimated treatment effects and coefficients (related to the running variable and the coupon) appear to be robust and consistent, showing little sensitivity to changes in bandwidth.
+
+################################################################################
 
 
-# Assignment 2
-
-```{r}
 # Load data
 data <- readRDS("~/GitHub/cdsba-lucaspuebla93/Causal_Data_Science_Data/shipping.rds")
 print(data)
@@ -61,13 +53,5 @@ ggplot(data, aes(x = purchase_amount)) +
   geom_density(fill = "skyblue", color = "black") +
   geom_vline(xintercept = 30, linetype = "dashed", color = "red") +  # Adding a vertical line at 30€ cutoff
   labs(x = "Purchase Amount", y = "Density", title = "Density Plot of Purchase Amount with Cutoff at 30€")
-```
-
-The density plot suggests a non-smooth distribution of observations around the 30€ cutoff, showing multiple peaks rather than a smooth density.
-The discontinuity observed in the density plot might affect the validity of using purchase_amount as a running variable in RDD analysis, as the assumptions of continuity and density might not hold precisely around the cutoff point.
-
-
-
-
 
 
